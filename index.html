@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
     <link href="./styles.css" rel="stylesheet">
     <link rel="shortcut icon" href="./assets/icon/mars.jpeg">
     <title>Mars</title>
@@ -16,6 +16,18 @@
     <!-- and Electron <span id="electron-version"></span>. -->
 
     <!-- You can also require other files to run in this process -->
+    <div id="rendered"></div>
+    <div id="editor">
+      <textarea id="input"># here</textarea>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    <script>
+      document.getElementById('input').onkeyup = function(e) {
+        document.getElementById('rendered').innerHTML =
+        // marked('# Marked in browser\n\nRendered by **marked**.');
+        marked(document.getElementById('input').value);
+      };
+    </script>
     <script src="./renderer.js"></script>
   </body>
 </html>
