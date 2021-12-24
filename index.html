@@ -20,6 +20,22 @@
     <div id="editor">
       <textarea id="input"># here</textarea>
     </div>
+    <div>
+      <input
+         id="text-input"
+         type="text"
+      >
+    
+      <button id="btn">Click</button>
+    </div>
+    
+    <div>
+      <span>computed input value => </span>
+      <span
+         id="text-box"
+         style="color: red"
+      ></span>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
     <script>
       document.getElementById('input').onkeyup = function(e) {
@@ -27,11 +43,6 @@
         // marked('# Marked in browser\n\nRendered by **marked**.');
         marked(document.getElementById('input').value);
       };
-    </script>
-    <script>
-      const {ipcRenderer} = require('electron')
-      const payload = 'message'
-      ipcRenderer.send('CHANNEL_NAME', payload)
     </script>
     <script src="./renderer.js"></script>
   </body>

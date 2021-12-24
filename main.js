@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, ipcMain} = require('electron')
+const fs = require("fs")
 const path = require('path')
 
 function createWindow () {
@@ -17,6 +18,12 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
 
+  // 웹 페이지 로드 완료
+  mainWindow.webContents.on('did-finish-load', (evt) => {
+    // onWebcontentsValue 이벤트 송신
+    mainWindow.webContents.send('onWebcontentsValue', 'on load...')
+  })
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
@@ -33,7 +40,17 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  win.webContents.send('IPC_RENDERER_CHANNEL_NAME', 'message')
+  // onInputValue 이벤트 수신
+  ipcMain.on('onInputValue', (evt, payload) => {
+    fs.writeFile("message.md", payload, 'utf-8', () => {
+      console.log('on ipcMain event:: ', payload)
+
+      const computedPayload = payload + '(computed)'
+
+      // replyInputValue 송신 또는 응답
+      evt.reply('replyInputValue', computedPayload)
+    })
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -45,11 +62,3 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-
-// ipcMain에서의 이벤트 수신
-ipcMain.on('CHANNEL_NAME', (evt, payload) => {
-  console.log(payload)
-  
-  evt.reply('IPC_RENDERER_CHANNEL_NAME', 'message')
-})
