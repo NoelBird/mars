@@ -28,6 +28,11 @@
         marked(document.getElementById('input').value);
       };
     </script>
+    <script>
+      const {ipcRenderer} = require('electron')
+      const payload = 'message'
+      ipcRenderer.send('CHANNEL_NAME', payload)
+    </script>
     <script src="./renderer.js"></script>
   </body>
 </html>

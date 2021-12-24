@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -8,7 +8,9 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false
     }
   })
 
@@ -30,6 +32,8 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  win.webContents.send('IPC_RENDERER_CHANNEL_NAME', 'message')
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -41,3 +45,11 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+// ipcMain에서의 이벤트 수신
+ipcMain.on('CHANNEL_NAME', (evt, payload) => {
+  console.log(payload)
+  
+  evt.reply('IPC_RENDERER_CHANNEL_NAME', 'message')
+})
