@@ -1,10 +1,51 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron')
 const fs = require("fs")
 const path = require('path')
+const controllers = require('./controllers')
+
+let markdown_text = ""
+let markdown_text_rendered = ""
+
+function createMenu() {
+  const isMac = process.platform === 'darwin'
+  
+  const template = [
+  // { role: 'appMenu' }
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { label: 'about',
+          click: async () => await shell.openExternal('https://github.com/noelbird/mars')},
+        { role: 'quit' }
+      ]
+    }] : []),
+    // { role: 'fileMenu' }
+    ...(isMac ? [{
+      label: 'File',
+      submenu: [
+        { label: 'Save',
+          click: async () => await controllers.save("_markdown_rendered.md", markdown_text_rendered)},
+        { label: 'Load',
+          click: async () => {
+            markdown_text_rendered = await controllers.load("_markdown_rendered.md")
+            console.log(markdown_text_rendered)
+          }
+        },
+        { role: 'close' }
+      ]
+    }] : []),
+  ]
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+
+  return menu
+}
 
 function createWindow () {
   // Create the browser window.
+  const menu = createMenu()
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -42,14 +83,12 @@ app.whenReady().then(() => {
 
   // onInputValue 이벤트 수신
   ipcMain.on('onInputValue', (evt, payload) => {
-    fs.writeFile("message.md", payload, 'utf-8', () => {
       console.log('on ipcMain event:: ', payload)
-
-      const computedPayload = payload + '(computed)'
+      const computedPayload = payload
+      markdown_text_rendered = computedPayload
 
       // replyInputValue 송신 또는 응답
       evt.reply('replyInputValue', computedPayload)
-    })
   })
 })
 

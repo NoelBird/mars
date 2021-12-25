@@ -7,9 +7,26 @@
     <link href="./styles.css" rel="stylesheet">
     <link rel="shortcut icon" href="./assets/icon/mars.jpeg">
     <title>Mars</title>
+    <style>
+      div {
+        /* If you want to implement it in very old browser-versions */
+        -webkit-user-select: none; /* Chrome/Safari */ 
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+
+        /* The rule below is not implemented in browsers yet */
+        -o-user-select: none;
+
+        /* The rule below is implemented in most browsers by now */
+        user-select: none;
+        -webkit-tap-highlight-color:transparent;
+        outline-style:none;
+    }
+    </style>
   </head>
   <body>
     <h1>Mars</h1>
+    <img src="./assets/img/mars.jpeg" height="100px" width="100px" alt="">
 
     <!-- We are using Node.js <span id="node-version"></span>, -->
     <!-- Chromium <span id="chrome-version"></span>, -->
@@ -18,32 +35,9 @@
     <!-- You can also require other files to run in this process -->
     <div id="rendered"></div>
     <div id="editor">
-      <textarea id="input"># here</textarea>
-    </div>
-    <div>
-      <input
-         id="text-input"
-         type="text"
-      >
-    
-      <button id="btn">Click</button>
-    </div>
-    
-    <div>
-      <span>computed input value => </span>
-      <span
-         id="text-box"
-         style="color: red"
-      ></span>
+      <div id="input" contentEditable="true"># here</div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
-    <script>
-      document.getElementById('input').onkeyup = function(e) {
-        document.getElementById('rendered').innerHTML =
-        // marked('# Marked in browser\n\nRendered by **marked**.');
-        marked(document.getElementById('input').value);
-      };
-    </script>
     <script src="./renderer.js"></script>
   </body>
 </html>
