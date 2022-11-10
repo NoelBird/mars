@@ -14,7 +14,7 @@
   "author": "noelbird, BY1994",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^16.0.5"
+    "electron": "^18.3.7"
   },
   "dependencies": {
     "marked": "^4.0.8"
